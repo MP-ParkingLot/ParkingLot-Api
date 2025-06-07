@@ -7,6 +7,7 @@ import com.mp.parkinglot.entity.User;
 import com.mp.parkinglot.repository.ReviewRepository;
 import com.mp.parkinglot.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +18,20 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/review")
+@Slf4j
 public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final AuthService authService;
 
     @GetMapping("/{location_id}")
     public List<Review> getReviews(@PathVariable("location_id") String locationId) {
+        log.info("Get reviews for {}", locationId);
         return reviewRepository.findByParkinglotId(locationId);
     }
 
     @PostMapping("/{location_id}")
     public ResponseEntity<Map<String,String>> saveReview(@PathVariable("location_id") String locationId, @RequestBody ReviewRequest reviewDto, @CookieValue("accessToken") String accessToken) {
+        log.info("Save review for {}", locationId);
         User user = authService.getUser(accessToken);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -43,6 +47,7 @@ public class ReviewController {
 
     @PutMapping("/{review_id}")
     public ResponseEntity<Map<String,String>> updateReview(@PathVariable("review_id") Long reviewId, @RequestBody ReviewRequest reviewDto, @CookieValue("accessToken") String accessToken) {
+        log.info("Update review for {}", reviewId);
         User user = authService.getUser(accessToken);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -74,6 +79,7 @@ public class ReviewController {
 
     @DeleteMapping("/{review_id}")
     public ResponseEntity<Map<String,String>> deleteReview(@PathVariable("review_id") Long reviewId, @CookieValue("accessToken") String accessToken) {
+        log.info("Delete review for {}", reviewId);
         User user = authService.getUser(accessToken);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -98,6 +104,7 @@ public class ReviewController {
 
     @PostMapping("/{review_id}")
     public ResponseEntity<Map<String,String>> likeReview(@PathVariable("review_id") Long reviewId, @RequestBody LikeRequest likeRequest, @CookieValue("accessToken") String accessToken) {
+        log.info("Like review for {}", reviewId);
         User user = authService.getUser(accessToken);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

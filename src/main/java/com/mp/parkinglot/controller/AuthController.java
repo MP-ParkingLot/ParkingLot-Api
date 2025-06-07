@@ -5,6 +5,7 @@ import com.mp.parkinglot.repository.UserRepository;
 import com.mp.parkinglot.strings.JwtRole;
 import com.mp.parkinglot.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,14 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
     @PostMapping("")
     public ResponseEntity<Map<String, String>> login(@RequestBody String id, @RequestBody String password) {
+        log.info("Login request received");
         Optional<User> existing = userRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -42,6 +45,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@RequestParam("username") String id, @RequestParam("password") String password) {
+        log.info("Signup request received");
         Optional<User> existing = userRepository.findById(id);
         if (existing.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

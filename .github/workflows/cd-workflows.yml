@@ -57,8 +57,14 @@ jobs:
             echo "🥳 Pulling new image"
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             
-            echo "🌱 Running new container"
-            sudo docker run -d -p 8000:8080 --name mp-server ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
-
+            echo "🌱 Running new container with environment variables"
+            sudo docker run -d \
+              -p 8000:8080 \
+              --name mp-server \
+              -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_PWD=${{ secrets.DB_PWD }} \
+              ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             echo "🚮 Cleaning up old images"
             sudo docker image prune -f

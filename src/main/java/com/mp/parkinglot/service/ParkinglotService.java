@@ -19,17 +19,17 @@ public class ParkinglotService {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.PKLT_CD) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotResponse> response = new ArrayList<>();
         result.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.PKLT_CD,
-                        (pl.getTPKCT() - pl.getNOW_PRK_VHCL_CNT()),
-                        pl.getTPKCT(),
-                        Ratio.getRatio(pl.getNOW_PRK_VHCL_CNT(), pl.getTPKCT()).toString(),
-                        pl.getBSC_PRK_CRG()
+                        pl.getCode(),
+                        (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
+                        pl.getTotalCapacity(),
+                        Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
+                        pl.getBasicParkCharge()
                 ))
         );
 
@@ -41,11 +41,11 @@ public class ParkinglotService {
         List<ParkinglotResponse> response = new ArrayList<>();
         result.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.PKLT_CD,
-                        (pl.getTPKCT() - pl.getNOW_PRK_VHCL_CNT()),
-                        pl.getTPKCT(),
-                        Ratio.getRatio(pl.getNOW_PRK_VHCL_CNT(), pl.getTPKCT()).toString(),
-                        pl.getBSC_PRK_CRG()
+                        pl.getCode(),
+                        (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
+                        pl.getTotalCapacity(),
+                        Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
+                        pl.getBasicParkCharge()
                 ))
         );
 
@@ -55,17 +55,17 @@ public class ParkinglotService {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.PKLT_CD) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotResponse> temp = new ArrayList<>();
         result.forEach(pl ->
                 temp.add(new ParkinglotResponse(
-                        pl.PKLT_CD,
-                        (pl.getTPKCT() - pl.getNOW_PRK_VHCL_CNT()),
-                        pl.getTPKCT(),
-                        Ratio.getRatio(pl.getNOW_PRK_VHCL_CNT(), pl.getTPKCT()).toString(),
-                        pl.getBSC_PRK_CRG()
+                        pl.getCode(),
+                        (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
+                        pl.getTotalCapacity(),
+                        Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
+                        pl.getBasicParkCharge()
                 ))
         );
 
@@ -80,25 +80,25 @@ public class ParkinglotService {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.PKLT_CD) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotApiResponse> temp = new ArrayList<>();
 
         temp = result
                 .stream()
-                .filter( pl -> pl.getPAY_YN().equals("Y") )
+                .filter( pl -> pl.getIsPay().equals("Y") )
                 .collect(Collectors.toList());
 
         List<ParkinglotResponse> response = new ArrayList<>();
 
         temp.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.PKLT_CD,
-                        (pl.getTPKCT() - pl.getNOW_PRK_VHCL_CNT()),
-                        pl.getTPKCT(),
-                        Ratio.getRatio(pl.getNOW_PRK_VHCL_CNT(), pl.getTPKCT()).toString(),
-                        pl.getBSC_PRK_CRG()
+                        pl.getCode(),
+                        (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
+                        pl.getTotalCapacity(),
+                        Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
+                        pl.getBasicParkCharge()
                 ))
         );
 

@@ -2,10 +2,11 @@ package com.mp.parkinglot.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mp.parkinglot.dto.ParkinglotApiResponse;
-import com.mp.parkinglot.dto.ParkinglotResult;
 import com.mp.parkinglot.dto.ParkinglotResultWrapper;
 import com.mp.parkinglot.exception.CustomException;
 import com.mp.parkinglot.exception.ErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStreamReader;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 public class ParkinglotRequestService {
+    private static final Logger log = LoggerFactory.getLogger(ParkinglotRequestService.class);
     private final String API_URL = System.getenv("API_URL");
     private final String KEY = System.getenv("API_ID");     // 인증키
     private final String TYPE = "json";            // 요청파일타입 - xml, xmlf, xls, json
@@ -47,6 +49,7 @@ public class ParkinglotRequestService {
                 rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 throw new CustomException(ErrorCode.FAILED_API_REQUEST);
             }
+
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = rd.readLine()) != null) {
@@ -54,15 +57,28 @@ public class ParkinglotRequestService {
             }
             rd.close();
 
+            System.out.println("응답 내용 sb: " + sb.toString());
+
             ObjectMapper objectMapper = new ObjectMapper();
-            ParkinglotResultWrapper wrapper = objectMapper.readValue(sb.toString(), ParkinglotResultWrapper.class);
-            List<ParkinglotApiResponse> resultList = wrapper.GetParkingInfo.row;
+            ParkinglotResultWrapper response = objectMapper.readValue(sb.toString(), ParkinglotResultWrapper.class);     // 오류 발생
+
+            log.info("response: " + response.getParkingInfo.getListTotalCount());
+            List<ParkinglotApiResponse> resultList = response.getParkingInfo.row;
+
+            log.info("엥3");
+
+//            log.info("resultList: " + resultList.toString());
+
+            log.info("엥4");
 
             conn.disconnect();
+            log.info("엥5");
             return resultList;
         } catch (Exception e) {
+            log.info("엥6");
             e.getMessage();
         }
+        log.info("엥7");
         return null;
     }
 
@@ -98,7 +114,7 @@ public class ParkinglotRequestService {
 
             ObjectMapper objectMapper = new ObjectMapper();
             ParkinglotResultWrapper wrapper = objectMapper.readValue(sb.toString(), ParkinglotResultWrapper.class);
-            List<ParkinglotApiResponse> resultList = wrapper.GetParkingInfo.row;
+            List<ParkinglotApiResponse> resultList = wrapper.getParkingInfo.row;
 
             conn.disconnect();
 

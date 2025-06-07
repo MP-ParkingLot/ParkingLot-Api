@@ -11,8 +11,8 @@ public enum Ratio {
         this.maxRatio = maxRatio;
     }
 
-    static public Ratio getRatio(Long filled, Long compacity) {
-        Long ratio = filled / compacity * 100;
+    static public Ratio getRatio(Double filled, Double compacity) {
+        Double ratio = filled / compacity * 100;
         if (ratio < 0) return EMPTY;
         if (ratio <= 30) return PLENTY;
         if (ratio <= 70) return MODERATE;

@@ -1,0 +1,60 @@
+package com.mp.parkinglot.controller;
+
+import com.mp.parkinglot.entity.User;
+import com.mp.parkinglot.repository.UserRepository;
+import com.mp.parkinglot.strings.JwtRole;
+import com.mp.parkinglot.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Optional;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/auth")
+public class AuthController {
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
+
+    @PostMapping("")
+    public ResponseEntity<Map<String, String>> login(@RequestBody String id, @RequestBody String password) {
+        Optional<User> existing = userRepository.findById(id);
+        if (existing.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "user not found"));
+        }
+
+        if (!password.equals(existing.get().getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "wrong password"));
+        }
+
+        String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, "access_token=" + accessToken)
+                .body(Map.of("message", "sign-in success"));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<Map<String, String>> signup(@RequestParam("username") String id, @RequestParam("password") String password) {
+        Optional<User> existing = userRepository.findById(id);
+        if (existing.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "id is used"));
+        }
+
+        User user = new User(id, password);
+        User saved = userRepository.save(user);
+
+        String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, "access_token=" + accessToken)
+                .body(Map.of("message", saved.getId() + " created"));
+    }
+}

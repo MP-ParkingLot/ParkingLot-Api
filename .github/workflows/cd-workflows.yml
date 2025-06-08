@@ -65,6 +65,8 @@ jobs:
               -e DB_URL=${{ secrets.DB_URL }} \
               -e DB_USER=${{ secrets.DB_USER }} \
               -e DB_PWD=${{ secrets.DB_PWD }} \
+              -e API_URL=${{ secrets.API_URL }} \
+              -e API_ID=${{ secrets.API_ID }} \ 
               ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
             echo "🚮 Cleaning up old images"
             sudo docker image prune -f

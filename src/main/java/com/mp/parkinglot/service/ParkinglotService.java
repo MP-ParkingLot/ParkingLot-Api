@@ -19,13 +19,13 @@ public class ParkinglotService {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getAddress()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotResponse> response = new ArrayList<>();
         result.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.getCode(),
+                        pl.getAddress(),
                         (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
                         pl.getTotalCapacity(),
                         Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
@@ -35,13 +35,14 @@ public class ParkinglotService {
 
         return response;
     }
+
     public List<ParkinglotResponse> regionParkinglots(String region) {
         List<ParkinglotApiResponse> result = parkinglotRequestService.parkinglotRequest(region);
 
         List<ParkinglotResponse> response = new ArrayList<>();
         result.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.getCode(),
+                        pl.getAddress(),
                         (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
                         pl.getTotalCapacity(),
                         Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
@@ -51,17 +52,18 @@ public class ParkinglotService {
 
         return response;
     }
+
     public List<ParkinglotResponse> emptyParkinglots(List<String> parkinglots) {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getAddress()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotResponse> temp = new ArrayList<>();
         result.forEach(pl ->
                 temp.add(new ParkinglotResponse(
-                        pl.getCode(),
+                        pl.getAddress(),
                         (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
                         pl.getTotalCapacity(),
                         Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),
@@ -76,11 +78,12 @@ public class ParkinglotService {
 
         return response;
     }
+
     public List<ParkinglotResponse> freeParkinglots(List<String> parkinglots) {
         List<ParkinglotApiResponse> parkinglotApiResponses = parkinglotRequestService.parkinglotRequest();
 
         List<ParkinglotApiResponse> result = parkinglotApiResponses.stream()
-                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getCode()) ))
+                .filter( loc -> parkinglots.stream().anyMatch( p -> p.equals(loc.getAddress()) ))
                 .collect(Collectors.toList());
 
         List<ParkinglotApiResponse> temp = new ArrayList<>();
@@ -94,7 +97,7 @@ public class ParkinglotService {
 
         temp.forEach(pl ->
                 response.add(new ParkinglotResponse(
-                        pl.getCode(),
+                        pl.getAddress(),
                         (pl.getTotalCapacity() - pl.getNowParkedVehicle()),
                         pl.getTotalCapacity(),
                         Ratio.getRatio(pl.getNowParkedVehicle(), pl.getTotalCapacity()).toString(),

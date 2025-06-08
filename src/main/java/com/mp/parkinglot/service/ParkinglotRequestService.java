@@ -57,28 +57,18 @@ public class ParkinglotRequestService {
             }
             rd.close();
 
-            System.out.println("응답 내용 sb: " + sb.toString());
-
             ObjectMapper objectMapper = new ObjectMapper();
             ParkinglotResultWrapper response = objectMapper.readValue(sb.toString(), ParkinglotResultWrapper.class);     // 오류 발생
 
             log.info("response: " + response.getParkingInfo.getListTotalCount());
             List<ParkinglotApiResponse> resultList = response.getParkingInfo.row;
 
-            log.info("엥3");
-
-//            log.info("resultList: " + resultList.toString());
-
-            log.info("엥4");
-
             conn.disconnect();
-            log.info("엥5");
+
             return resultList;
         } catch (Exception e) {
-            log.info("엥6");
             e.getMessage();
         }
-        log.info("엥7");
         return null;
     }
 

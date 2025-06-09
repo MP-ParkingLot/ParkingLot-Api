@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestParam("username") String id, @RequestParam("password") String password) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody String id, @RequestBody String password) {
         log.info("Signup request received");
         Optional<User> existing = userRepository.findById(id);
         if (existing.isPresent()) {

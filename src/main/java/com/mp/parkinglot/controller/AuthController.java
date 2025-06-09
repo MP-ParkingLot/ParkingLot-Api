@@ -1,5 +1,6 @@
 package com.mp.parkinglot.controller;
 
+import com.mp.parkinglot.dto.AuthRequest;
 import com.mp.parkinglot.entity.User;
 import com.mp.parkinglot.repository.UserRepository;
 import com.mp.parkinglot.strings.JwtRole;
@@ -23,8 +24,11 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("")
-    public ResponseEntity<Map<String, String>> login(@RequestBody String id, @RequestBody String password) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthRequest authRequest) {
         log.info("Login request received");
+        String id = authRequest.getId();
+        String password = authRequest.getPassword();
+
         Optional<User> existing = userRepository.findById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -44,8 +48,11 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody String id, @RequestBody String password) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody AuthRequest authRequest) {
         log.info("Signup request received");
+        String id = authRequest.getId();
+        String password = authRequest.getPassword();
+
         Optional<User> existing = userRepository.findById(id);
         if (existing.isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)

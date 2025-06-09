@@ -1,5 +1,8 @@
 package com.mp.parkinglot.dto;
 
+import lombok.Getter;
+
+@Getter
 public class LikeRequest {
     private boolean isLike;
 

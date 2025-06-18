@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +43,15 @@ public class AuthController {
 
         String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
 
+        ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)        // JS 접근 방지 (보안상 중요)
+                .secure(false)         // HTTPS 환경이라면 true
+                .path("/")             // 전체 경로에 적용
+                .sameSite("Lax")       // 또는 "Strict", "None"
+                .build();
+
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of("message", "sign-in success"));
     }
 
@@ -64,8 +72,15 @@ public class AuthController {
 
         String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken)
+        ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)        // JS 접근 방지 (보안상 중요)
+                .secure(false)         // HTTPS 환경이라면 true
+                .path("/")             // 전체 경로에 적용
+                .sameSite("Lax")       // 또는 "Strict", "None"
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(Map.of("message", saved.getId() + " created"));
     }
 }

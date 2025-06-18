@@ -43,6 +43,7 @@ public class ReviewController {
         review.setParkinglotId(locationId);
         review.setLikes(0);
         review.setCreatedAt(LocalDateTime.now());
+        review.setUser(user);
         reviewRepository.save(review);
 
         return ResponseEntity.ok(Map.of("message", "Review Update Success"));

@@ -102,7 +102,7 @@ public class ReviewController {
         return ResponseEntity.ok(Map.of("message", "Review Delete Success"));
     }
 
-    @PostMapping("/{review_id}")
+    @PostMapping("/{review_id}/like")
     public ResponseEntity<Map<String,String>> likeReview(@PathVariable("review_id") Long reviewId, @RequestBody LikeRequest likeRequest, @CookieValue("accessToken") String accessToken) {
         log.info("Like review for {}", reviewId);
         User user = authService.getUser(accessToken);

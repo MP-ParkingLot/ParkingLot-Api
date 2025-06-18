@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,8 @@ public class ReviewController {
 
         Review review = reviewDto.toReview();
         review.setParkinglotId(locationId);
+        review.setLikes(0);
+        review.setCreatedAt(LocalDateTime.now());
         reviewRepository.save(review);
 
         return ResponseEntity.ok(Map.of("message", "Review Update Success"));

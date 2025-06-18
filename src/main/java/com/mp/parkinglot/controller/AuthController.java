@@ -43,7 +43,7 @@ public class AuthController {
         String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, "access_token=" + accessToken)
+                .header(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken)
                 .body(Map.of("message", "sign-in success"));
     }
 
@@ -65,7 +65,7 @@ public class AuthController {
         String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, "access_token=" + accessToken)
+                .header(HttpHeaders.SET_COOKIE, "accessToken=" + accessToken)
                 .body(Map.of("message", saved.getId() + " created"));
     }
 }

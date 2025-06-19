@@ -26,7 +26,7 @@ public class ReviewController {
     private final AuthService authService;
 
     @GetMapping("/{location_id}")
-    public ResponseEntity<Map<String, List<ReviewResponse>>> getReviews(@PathVariable("location_id") String locationId) {
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("location_id") String locationId) {
         log.info("Get reviews for {}", locationId);
         List<Review> reviews = reviewRepository.findByParkinglotId(locationId);
 
@@ -53,7 +53,7 @@ public class ReviewController {
             response.add(reviewResponse);
         });
 
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("reviews", response));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping("/{location_id}")

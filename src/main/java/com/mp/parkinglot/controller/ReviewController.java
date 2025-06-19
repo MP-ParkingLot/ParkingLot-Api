@@ -2,19 +2,20 @@ package com.mp.parkinglot.controller;
 
 import com.mp.parkinglot.dto.LikeRequest;
 import com.mp.parkinglot.dto.ReviewRequest;
+import com.mp.parkinglot.dto.ReviewResponse;
 import com.mp.parkinglot.entity.Review;
 import com.mp.parkinglot.entity.User;
 import com.mp.parkinglot.repository.ReviewRepository;
 import com.mp.parkinglot.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +26,34 @@ public class ReviewController {
     private final AuthService authService;
 
     @GetMapping("/{location_id}")
-    public List<Review> getReviews(@PathVariable("location_id") String locationId) {
+    public ResponseEntity<Map<String, List<ReviewResponse>>> getReviews(@PathVariable("location_id") String locationId) {
         log.info("Get reviews for {}", locationId);
-        return reviewRepository.findByParkinglotId(locationId);
+        List<Review> reviews = reviewRepository.findByParkinglotId(locationId);
+
+        List<ReviewResponse> response = new ArrayList<>();
+
+        reviews.forEach(review -> {
+            ReviewResponse reviewResponse = new ReviewResponse();
+            Map<String, Boolean> categories = new HashMap<>();
+
+            categories.put("bathroom", review.getBathroom());
+            categories.put("wide", review.getWide());
+            categories.put("charger", review.getCharger());
+
+            reviewResponse.setId(review.getId());
+            reviewResponse.setRate(review.getRate());
+            reviewResponse.setLikes(review.getLikes());
+            reviewResponse.setTitle(review.getTitle());
+            reviewResponse.setContents(review.getContents());
+            reviewResponse.setCreatedAt(review.getCreatedAt());
+            reviewResponse.setCategories(categories);
+
+            log.info(categories.toString());
+
+            response.add(reviewResponse);
+        });
+
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("reviews", response));
     }
 
     @PostMapping("/{location_id}")
@@ -65,7 +91,7 @@ public class ReviewController {
                     .body(Map.of("message","Review not existing"));
         }
 
-        if (review.getUser().getId() != user.getId()) {
+        if (!Objects.equals(review.getUser().getId(), user.getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(Map.of("message","Not allowed to update this review"));
         }
@@ -73,9 +99,9 @@ public class ReviewController {
         review.setTitle(reviewDto.getTitle());
         review.setContents(reviewDto.getContents());
         review.setRate(reviewDto.getRate());
-        review.setBathroom(reviewDto.getCategories().getBathroom());
-        review.setWide(reviewDto.getCategories().getWide());
-        review.setCharger(reviewDto.getCategories().getCharger());
+        review.setBathroom(reviewDto.getCategories().get("bathroom"));
+        review.setWide(reviewDto.getCategories().get("wide"));
+        review.setCharger(reviewDto.getCategories().get("charger"));
         reviewRepository.save(review);
 
         return ResponseEntity.ok(Map.of("message", "Review Update Success"));

@@ -1,12 +1,12 @@
 package com.mp.parkinglot.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mp.parkinglot.entity.Review;
-import com.mp.parkinglot.strings.PLCategories;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
+@Setter
 @Getter
 public class ReviewResponse {
     private Long id;
@@ -21,7 +21,7 @@ public class ReviewResponse {
 
     private LocalDateTime createdAt;
 
-    private PLCategories categories;
+    private Map<String, Boolean> categories;
 //
 //    public Review toReview() {
 //        return Review.builder()

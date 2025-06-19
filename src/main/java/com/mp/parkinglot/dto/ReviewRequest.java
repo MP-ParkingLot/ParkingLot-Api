@@ -1,11 +1,8 @@
 package com.mp.parkinglot.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mp.parkinglot.entity.Review;
-import com.mp.parkinglot.strings.PLCategories;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 public class ReviewRequest {
@@ -15,16 +12,16 @@ public class ReviewRequest {
 
     private Integer rate;
 
-    private PLCategories categories;
+    private Map<String, Boolean> categories;
 
     public Review toReview() {
         return Review.builder()
                 .title(title)
                 .contents(contents)
                 .rate(rate)
-                .bathroom(categories.getBathroom())
-                .wide(categories.getWide())
-                .charger(categories.getCharger())
+                .bathroom(categories.get("bathroom"))
+                .wide(categories.get("wide"))
+                .charger(categories.get("charger"))
                 .build();
     }
 }

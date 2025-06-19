@@ -59,6 +59,7 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> signup(@RequestBody AuthRequest authRequest) {
         log.info("Signup request received");
         String id = authRequest.getId();
+        String name = authRequest.getNickname();
         String password = authRequest.getPassword();
 
         Optional<User> existing = userRepository.findById(id);
@@ -67,7 +68,7 @@ public class AuthController {
                     .body(Map.of("message", "id is used"));
         }
 
-        User user = new User(id, password);
+        User user = new User(id, name, password);
         User saved = userRepository.save(user);
 
         String accessToken = jwtUtil.generateAccessToken(id, JwtRole.ROLE_USER.getRole());

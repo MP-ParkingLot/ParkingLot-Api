@@ -9,7 +9,6 @@ import com.mp.parkinglot.repository.ReviewRepository;
 import com.mp.parkinglot.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.logging.Log;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +46,7 @@ public class ReviewController {
             reviewResponse.setContents(review.getContents());
             reviewResponse.setCreatedAt(review.getCreatedAt());
             reviewResponse.setUserId(review.getUser().getId());
+            reviewResponse.setNickname(review.getUser().getName());
             reviewResponse.setCategories(categories);
 
             response.add(reviewResponse);

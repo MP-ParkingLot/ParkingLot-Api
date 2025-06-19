@@ -17,6 +17,8 @@ public class ReviewResponse {
 
     private String userId;
 
+    private String nickname;
+
     private Integer rate;
 
     private Integer likes;

@@ -46,9 +46,8 @@ public class ReviewController {
             reviewResponse.setTitle(review.getTitle());
             reviewResponse.setContents(review.getContents());
             reviewResponse.setCreatedAt(review.getCreatedAt());
+            reviewResponse.setUserId(review.getUser().getId());
             reviewResponse.setCategories(categories);
-
-            log.info(categories.toString());
 
             response.add(reviewResponse);
         });

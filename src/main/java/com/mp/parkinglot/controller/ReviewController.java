@@ -9,7 +9,9 @@ import com.mp.parkinglot.repository.ReviewRepository;
 import com.mp.parkinglot.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +37,9 @@ public class ReviewController {
             ReviewResponse reviewResponse = new ReviewResponse();
             Map<String, Boolean> categories = new HashMap<>();
 
-            categories.put("bathroom", review.getBathroom());
-            categories.put("wide", review.getWide());
-            categories.put("charger", review.getCharger());
+            categories.put("화장실", review.getBathroom());
+            categories.put("넓은공간", review.getWide());
+            categories.put("충전소", review.getCharger());
 
             reviewResponse.setId(review.getId());
             reviewResponse.setRate(review.getRate());
@@ -52,7 +54,10 @@ public class ReviewController {
             response.add(reviewResponse);
         });
 
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8")
+                .body(response);
     }
 
     @PostMapping("/{location_id}")

@@ -52,7 +52,7 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(Map.of("message", "sign-in success"));
+                .body(Map.of("message", "sign-in success - " + accessToken));
     }
 
     @PostMapping("/signup")

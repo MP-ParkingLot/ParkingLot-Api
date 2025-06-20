@@ -19,9 +19,9 @@ public class ReviewRequest {
                 .title(title)
                 .contents(contents)
                 .rate(rate)
-                .bathroom(categories.get("bathroom"))
-                .wide(categories.get("wide"))
-                .charger(categories.get("charger"))
+                .bathroom(categories.get("화장실"))
+                .wide(categories.get("넓은공간"))
+                .charger(categories.get("충전소"))
                 .build();
     }
 }

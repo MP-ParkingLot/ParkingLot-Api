@@ -4,9 +4,12 @@ import com.mp.parkinglot.dto.LikeRequest;
 import com.mp.parkinglot.dto.ReviewRequest;
 import com.mp.parkinglot.dto.ReviewResponse;
 import com.mp.parkinglot.entity.Review;
+import com.mp.parkinglot.entity.ReviewUser;
 import com.mp.parkinglot.entity.User;
 import com.mp.parkinglot.repository.ReviewRepository;
+import com.mp.parkinglot.repository.ReviewUserRepository;
 import com.mp.parkinglot.service.AuthService;
+import com.mp.parkinglot.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -25,10 +28,13 @@ import java.util.*;
 public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final AuthService authService;
+    private final ReviewUserRepository reviewUserRepository;
 
     @GetMapping("/{location_id}")
-    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("location_id") String locationId) {
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable("location_id") String locationId, @CookieValue("accessToken") String accessToken) {
         log.info("Get reviews for {}", locationId);
+        User user = authService.getUser(accessToken);
+
         List<Review> reviews = reviewRepository.findByParkinglotId(locationId);
 
         List<ReviewResponse> response = new ArrayList<>();
@@ -48,8 +54,12 @@ public class ReviewController {
             reviewResponse.setContents(review.getContents());
             reviewResponse.setCreatedAt(review.getCreatedAt());
             reviewResponse.setUserId(review.getUser().getId());
-            reviewResponse.setNickname(review.getUser().getName());
             reviewResponse.setCategories(categories);
+
+            if (user != null) {
+                Optional<ReviewUser> reviewUser = reviewUserRepository.findByUserIdAndReviewId(user.getId(), review.getId());
+                reviewUser.ifPresent(value -> reviewResponse.setIsLikedByMe(value.getIsLiked()));
+            }
 
             response.add(reviewResponse);
         });
@@ -157,6 +167,13 @@ public class ReviewController {
         }
 
         Integer likes = review.getLikes();
+
+        ReviewUser reviewUser = reviewUserRepository.findByUserIdAndReviewId(user.getId(), reviewId).orElse(null);
+        if (reviewUser == null) {
+            reviewUser = new ReviewUser(review, user, likeRequest.isLike());
+        }
+
+        reviewUserRepository.save(reviewUser);
 
         if (likeRequest.isLike()) {
             review.setLikes(likes+1);

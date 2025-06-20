@@ -17,8 +17,6 @@ public class ReviewResponse {
 
     private String userId;
 
-    private String nickname;
-
     private Integer rate;
 
     private Integer likes;
@@ -26,6 +24,8 @@ public class ReviewResponse {
     private LocalDateTime createdAt;
 
     private Map<String, Boolean> categories;
+
+    private Boolean isLikedByMe;
 //
 //    public Review toReview() {
 //        return Review.builder()

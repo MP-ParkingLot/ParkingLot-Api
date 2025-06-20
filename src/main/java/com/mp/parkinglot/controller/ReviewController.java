@@ -161,11 +161,6 @@ public class ReviewController {
                     .body(Map.of("message","Review not existing"));
         }
 
-        if (review.getUser().getId() != user.getId()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(Map.of("message","Not allowed to delete this review"));
-        }
-
         Integer likes = review.getLikes();
 
         ReviewUser reviewUser = reviewUserRepository.findByUserIdAndReviewId(user.getId(), reviewId).orElse(null);

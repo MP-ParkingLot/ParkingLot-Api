@@ -25,7 +25,7 @@ public class ReviewResponse {
 
     private Map<String, Boolean> categories;
 
-    private Boolean isLikedByMe;
+    private Boolean isLikedByMe = false;
 //
 //    public Review toReview() {
 //        return Review.builder()
